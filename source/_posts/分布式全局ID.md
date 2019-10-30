@@ -25,7 +25,7 @@ categories: 实践技术
 
 ### Snowflake
 
-![](/images/snowflake.jpg)<center>(来源于网络)</center>
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/snowflake.jpg)
 
 根据Twitter的业务需求，Snowflake系统生成64位的ID。由3部分组成：
 
@@ -38,5 +38,3 @@ categories: 实践技术
 ### 美团Leaf
 
 Leaf采用了和Snowflake类似的ID结构，对Snowflake方案做了改进，并考虑了时钟回拨的问题。但是Leaf要依赖数据库与ZooKeeper。
-
-> 全局ID的工程实现需要与业务紧密相连，这里就不展开细节了，等有机会动手使用或实现类似系统的时候一定会回来补上的。

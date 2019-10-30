@@ -7,7 +7,7 @@ categories: Java
 
 # 简介
 
-Servlet是Java Web的核心。其实只是一个很简单的规范，或者直接说接口。
+Servlet是Java Web开发中一个重要的概念，在3.1版本后可以支持非阻塞I/O。
 
 ```java
 public interface Servlet {
@@ -31,6 +31,6 @@ public interface Servlet {
 
 但是仅仅有Servlet不能支撑起一个服务器，还需要做端口监听，请求封装与返回等操作，一些Servlet容器（可理解为服务器），如Tomcat、Jetty就应运而生了。容器会调用Servlet的接口方法来管理它的生命周期。
 
-学习Servlet容器的原理才比较重要，不过同样，现在的框架成熟度使开发人员也渐渐不需要接触这些东西了。
+Spring Boot中有两个比较重要的上下文类型，一个是ServletWebServer，一个是ReactiveWebServer。在SpringApplication.run的时候会根据classpath进行推测，通常我们做的应用就是ServletWebServer。
 
 # Servlet版本简介

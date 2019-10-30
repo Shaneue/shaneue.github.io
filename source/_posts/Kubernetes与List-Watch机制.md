@@ -13,7 +13,7 @@ K8s一个重要的组件Etcd是一个Key-value类型的分布式数据库，保�
 
 # 简介
 
-![](/images/k8s_arch.png)<center>(来源于网络)</center>
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/k8s_arch.png)
 
 # 原理
 
@@ -21,6 +21,6 @@ K8s一个重要的组件Etcd是一个Key-value类型的分布式数据库，保�
 
 ### 如何使用List&Watch自定义Controller
 
-![](/images/list-watch1.png)<center>(来源于网络)</center>
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/list-watch1.png)
 
-![](/images/list-watch2.jpeg)<center>(来源于网络)</center>
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/list-watch2.jpeg)

@@ -6,5 +6,5 @@ categories: 机器学习
 ---
 # 定义以及损失函数与偏导
 <!-- more -->
-![](/images/lr.jpg)
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/lr.jpg)
 

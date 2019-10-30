@@ -27,7 +27,7 @@ Spring MVC就是一个基于Spring基础的一套快速开发WEB应用接口的�
 
   <center>(摘录自维基百科)</center>
 
-![](/images/MVC-Process.svg)<center>(来源于网络)</center>
+![](https://raw.githubusercontent.com/Shaneue/pictures/master/MVC-Process.svg)
 
 ### Spring MVC核心内容
 

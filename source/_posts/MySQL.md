@@ -25,8 +25,5 @@ categories: 开源应用
 
 - InnoDB与MyISAM索引区别
 
-  ![](/images/index_mysql.png)<center>(来源于网络)</center>
-
-
-> 该文还在继续写作中
+  ![](https://raw.githubusercontent.com/Shaneue/pictures/master/index_mysql.png)
 
