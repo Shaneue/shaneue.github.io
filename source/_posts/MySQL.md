@@ -3,6 +3,7 @@ title: MySQL
 date: 2018-11-16 21:55:11
 tags: [mysql]
 categories: 开源应用
+typora-root-url: ../
 ---
 
 # 关系数据库基础
@@ -25,5 +26,5 @@ categories: 开源应用
 
 - InnoDB与MyISAM索引区别
 
-  ![](https://raw.githubusercontent.com/Shaneue/pictures/master/index_mysql.png)
+  ![](/images/index_mysql.png)
 

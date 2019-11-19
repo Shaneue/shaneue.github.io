@@ -3,6 +3,7 @@ title: 分布式全局ID
 date: 2018-11-19 17:43:16
 tags: [tech]
 categories: 实践技术
+typora-root-url: ../
 ---
 
 # 简介
@@ -25,7 +26,7 @@ categories: 实践技术
 
 ### Snowflake
 
-![](https://raw.githubusercontent.com/Shaneue/pictures/master/snowflake.jpg)
+![](/images/snowflake.jpg)
 
 根据Twitter的业务需求，Snowflake系统生成64位的ID。由3部分组成：
 

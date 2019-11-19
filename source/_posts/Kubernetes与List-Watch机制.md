@@ -3,6 +3,7 @@ title: Kubernetes与List-Watch机制
 date: 2019-07-03 17:16:53
 tags: [tech]
 categories: k8s
+typora-root-url: ../
 ---
 
 # 背景
@@ -13,7 +14,7 @@ K8s一个重要的组件Etcd是一个Key-value类型的分布式数据库，保�
 
 # 简介
 
-![](https://raw.githubusercontent.com/Shaneue/pictures/master/k8s_arch.png)
+![](/images/k8s_arch.png)
 
 # 原理
 
@@ -21,6 +22,6 @@ K8s一个重要的组件Etcd是一个Key-value类型的分布式数据库，保�
 
 ### 如何使用List&Watch自定义Controller
 
-![](https://raw.githubusercontent.com/Shaneue/pictures/master/list-watch1.png)
+![](/images/list-watch1.png)
 
-![](https://raw.githubusercontent.com/Shaneue/pictures/master/list-watch2.jpeg)
+![](/images/list-watch2.jpeg)

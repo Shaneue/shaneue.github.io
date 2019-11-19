@@ -3,11 +3,12 @@ title: SSM
 date: 2018-12-03 10:31:40
 tags: [ssm]
 categories: 框架
+typora-root-url: ../
 ---
 
 # 简介
 
-提供Spring的Bean管理机制，Spring MVC使WEB应用接口开发更容易，MyBatis提供关系对象映射。整合起来可以更方便地开发WEB应用。后续的项目其实可以推荐使用Spring Boot全家桶，开发应用更快，只是精通起来可能比较难，因为约定的东西越来越多，普通的开发不会有机会深入底层。
+提供Spring的Bean管理机制、切面编程，Spring MVC使WEB应用接口开发更容易，MyBatis提供关系对象映射。整合起来可以更方便地开发WEB应用。
 
 <!-- more -->
 
@@ -27,7 +28,7 @@ Spring MVC就是一个基于Spring基础的一套快速开发WEB应用接口的�
 
   <center>(摘录自维基百科)</center>
 
-![](https://raw.githubusercontent.com/Shaneue/pictures/master/MVC-Process.svg)
+![](/images/MVC-Process.svg)
 
 ### Spring MVC核心内容
 
