@@ -1,7 +1,7 @@
 ---
 title: CI/CD
 date: 2019-03-11 11:30:45
-updated: 2020-07-12 12:00:00
+updated: 2020-05-12 12:00:00
 tags: [DevOps]
 ---
 

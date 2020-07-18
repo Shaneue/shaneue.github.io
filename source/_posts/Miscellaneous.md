@@ -15,8 +15,7 @@ Review questions
 
 ```java
 void heapify(int[] q) {
-    int size = q.length;
-    for (int i = size >>> 1; i >= 0; i--) {
+    for (int i = q.length >>> 1; i >= 0; i--) {
         siftDown(q, i, q[i]);
     }
 }
@@ -84,23 +83,23 @@ void quickSort(int[] s, int l, int r){
 
 ```java
 public class LRUMap<K, V> extends LinkedHashMap<K, V> {
-        private int maxSize;
+    private int maxSize;
 
-        LRUMap(int maxSize) {
-            super(maxSize, 0.75f, true);
-            this.maxSize = maxSize;
-        }
-
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-            return size() > maxSize;
-        }
+    LRUMap(int maxSize) {
+        super(maxSize, 0.75f, true);
+        this.maxSize = maxSize;
     }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > maxSize;
+    }
+}
 ```
 
 ### 负载均衡算法
 
-轮询、随机、最小连接、源地址一致性哈希。考虑到服务器处理能力的不同，可以采用加权的策略。
+轮询、随机、最小连接、源地址哈希、一致性哈希。考虑到服务器处理能力的不同，可以采用加权的策略。
 
 ### 一致性哈希
 

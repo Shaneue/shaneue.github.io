@@ -147,3 +147,23 @@ Java的零拷贝技术可以使用java.nio.channels.FileChannel的transferTo()�
 提供了幂等性与事务配置来实现Producer的Exactly-once语义。
 
 对消费者来说，需要关闭offset的自动提交，自己来保证只消费一次。比如消费完再提交offset，并且有办法辨别重复消费。
+
+### 3. Rebalance
+
+> Kafka provides the guarantee that a partition in a topic is assigned to only one consumer within a group.
+>
+> The ability of consumers clients to cooperate within a dynamic group is made possible by the use of the so-called Rebalance Protocol.
+
+0.9.0版本前，需要依赖Zookeeper来记录consumer的信息，造成zk的频繁写。
+
+现版本中，这部分信息会存在__consumer_offsets上，并使用broker上的group coordinator来进行rebalance。
+
+### 4. Static Membership
+
+利用这个特性，可以不触发rebalance过程。
+
+> If you want to use static membership,
+>
+> - Upgrade both broker cluster and client apps to 2.3 or beyond, and also make sure the upgraded brokers are using inter.broker.protocol.version of 2.3 or beyond as well.
+> - Set the config ConsumerConfig GROUP_INSTANCE_ID_CONFIG to a unique value for each consumer instance under one group.
+> - For Kafka Streams applications, it is sufficient to set a unique ConsumerConfig GROUP_INSTANCE_ID_CONFIG per KafkaStreams instance, independent of the number of used threads for an instance.
