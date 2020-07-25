@@ -4,4 +4,4 @@ date: 2018-11-08 09:13:46
 toc: false
 ---
 
-# Fail Fast, Fail Often
+# Dog Rich, Dont Forget.

@@ -18,7 +18,7 @@ Most commonly used as in-memory cache.
 
 二进制安全的字符串，会有一个length属性，而不是以'\0'判断结尾。
 
-数据结构源码文件：sds、dict、intset、ziplist、quicklist、hyperloglog、zipmap、t_**(目前有6个文件)
+数据结构源码文件：sds、dict、intset、ziplist、quicklist、hyperloglog、zipmap（已经废弃，代码中还留着为了兼容旧的rdb）、t_**(目前有6个文件)
 
 quicklist是list结构的底层实现，将ziplist串起来了，替换掉了旧的linkedlist。
 
