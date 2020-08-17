@@ -177,6 +177,8 @@ Redis消耗的Resident Set Size是根据peak memory usage来决定的，因此�
 
 > Synchronous replication of certain data can be requested by the clients using the WAIT command. However WAIT is only able to ensure that there are the specified number of acknowledged copies in the other Redis instances, it does not turn a set of Redis instances into a CP system with strong consistency: acknowledged writes can still be lost during a failover, depending on the exact configuration of the Redis persistence.
 
+将fsync配置成always同时配合WAIT命令是可以实现Strong Consistency的，但是这么做会完全牺牲可用性，因为任何一个节点fail，都会使集群不接受writes。
+
 只需要配置replicaof <masterip> <masterport>标识进程是一个replica。
 
 > This system works using three main mechanisms:
@@ -248,3 +250,11 @@ Starting with version 6 Redis supports ACLs. It is possible to configure users a
 > Using Redis scripting (available in Redis version 2.6 or greater) a number of use cases for pipelining can be addressed more efficiently using scripts that perform a lot of the work needed at the server side. A big advantage of scripting is that it is able to both read and write data with minimal latency, making operations like read, compute, write very fast (pipelining can't help in this scenario since the client needs the reply of the read command before it can call the write command).
 >
 > Sometimes the application may also want to send EVAL or EVALSHA commands in a pipeline. This is entirely possible and Redis explicitly supports it with the SCRIPT LOAD command (it guarantees that EVALSHA can be called without the risk of failing).
+
+### Lock with a single instance
+
+要考虑一下可重入性，解锁时会不会误解掉别人的锁。注意设置过期时间，并使用pipeline或者lua脚本来执行解锁操作。
+
+### RedLock
+
+该方案通过客户端来实现逻辑，来同步多个完全独立的实例，不通过replication来实现分布式锁，可以避免single point of failure。这是官方推荐的一种分布式锁方案。

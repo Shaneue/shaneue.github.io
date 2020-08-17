@@ -1,8 +1,9 @@
 ---
 title: Miscellaneous
 date: 2018-11-20 07:10:28
-updated: 2020-04-17 12:00:00
+updated: 2020-06-17 12:00:00
 tags: [Miscellaneous]
+typora-root-url: ../
 ---
 
 Review questions
@@ -10,6 +11,168 @@ Review questions
 <!-- more -->
 
 # Questions
+
+### LFU Cache
+
+```java
+public class LFUCache {
+    static class Node {
+        Node prev, next;
+        int key, value;
+        int frequency;
+
+        Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    int capacity;
+    Node head = new Node(0, 0);
+    Node tail = new Node(0, 0);
+    Map<Integer, Node> keyMap = new HashMap<>();
+    Map<Integer, Node> frequencyMap = new HashMap<>();
+    int size = 0;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        head.frequency = 0;
+        tail.frequency = Integer.MAX_VALUE;
+        head.next = tail;
+        tail.prev = head;
+        frequencyMap.put(head.frequency, head);
+        frequencyMap.put(tail.frequency, tail);
+    }
+
+    public int get(int key) {
+        Node node = keyMap.get(key);
+        if (node == null) {
+            return -1;
+        }
+        promote(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (capacity == 0) return;
+        Node node = keyMap.get(key);
+        if (node == null) {
+            if (size >= capacity) {
+                rmLFU();
+                size--;
+            }
+            Node nodeNew = new Node(key, value);
+            nodeNew.frequency = 1;
+            Node frequencyOne = frequencyMap.get(1);
+            if (frequencyOne == null) {
+                insertAfter(head, nodeNew);
+            } else {
+                insertAfter(frequencyOne, nodeNew);
+            }
+            size++;
+            frequencyMap.put(1, nodeNew);
+            keyMap.put(key, nodeNew);
+        } else {
+            promote(node);
+            node.value = value;
+        }
+    }
+
+    void remove(Node node) {
+        Node prev = node.prev;
+        Node next = node.next;
+        prev.next = next;
+        next.prev = prev;
+    }
+
+    void insertAfter(Node who, Node node) {
+        Node next = who.next;
+        who.next = node;
+        node.next = next;
+        next.prev = node;
+        node.prev = who;
+    }
+
+    void promote(Node node) {
+        int f = node.frequency;
+        node.frequency++;
+        Node prev = node.prev;
+        Node list = frequencyMap.get(f);
+        Node nextList = list.next;
+        if (node == list) {
+            if (prev.frequency == f) {
+                frequencyMap.put(f, prev);
+            } else {
+                frequencyMap.remove(f);
+            }
+            if (nextList.frequency == f + 1) {
+                remove(node);
+                insertAfter(frequencyMap.get(f + 1), node);
+            }
+        } else {
+            remove(node);
+            if (nextList.frequency == f + 1) {
+                insertAfter(frequencyMap.get(f + 1), node);
+            } else {
+                insertAfter(list, node);
+            }
+        }
+        frequencyMap.put(f + 1, node);
+    }
+
+    void rmLFU() {
+        Node node = head.next;
+        Node next = node.next;
+        remove(node);
+        keyMap.remove(node.key);
+        if (node.frequency != next.frequency) {
+            frequencyMap.remove(node.frequency);
+        }
+    }
+}
+```
+
+### Why use 2s complement
+
+一个是方便正负数相加，另一个是使0只有一种表示。
+
+### TCP
+
+![](/images/tcp.gif)
+
+### Binary Search
+
+```java
+int binarySearch(int[] array, int v) {
+    int l = 0, r = array.length - 1;
+    while (l <= r) {
+        int m = (l + r) / 2;
+        if (array[m] > v) {
+            r = m - 1;
+        } else if (array[m] < v) {
+            l = m + 1;
+        } else {
+            return m;
+        }
+    }
+    return -1;
+}
+```
+
+### Reverse Linked List
+
+```java
+Node reverseLinkedList(Node list) {
+    Node head = null, t;
+    while (list != null) {
+        t = list.next;
+        list.next = head;
+        head = list;
+        list = t;
+    }
+    return head;
+}
+```
 
 ### Heap
 
@@ -50,11 +213,13 @@ void siftUp(int[] q, int index, int e) {
 }
 ```
 
-### 布隆过滤器
+### Bloom Filter
 
 利用**布隆过滤器**代替哈希表，利用多Hash函数映射Bit Array的思想，省内存，可以准确判断某项数据不存在。缺点是有一定概率的假正率（误报存在），需要合理定义哈希函数个数，以及比特数组的大小。
 
-### 快排
+注意选择哈希函数个数与过滤器长度。
+
+### Quick Sort
 
 ```java
 void quickSort(int[] s, int l, int r){
@@ -76,10 +241,9 @@ void quickSort(int[] s, int l, int r){
         quickSort(s, i + 1, r);
     }
 }
-
 ```
 
-### LinkedHashMap实现LRU
+### LRU using LinkedHashMap
 
 ```java
 public class LRUMap<K, V> extends LinkedHashMap<K, V> {
@@ -97,26 +261,10 @@ public class LRUMap<K, V> extends LinkedHashMap<K, V> {
 }
 ```
 
-### 负载均衡算法
+### Load Balancing
 
-轮询、随机、最小连接、源地址哈希、一致性哈希。考虑到服务器处理能力的不同，可以采用加权的策略。
+轮询、随机、最小连接、源地址哈希、一致性哈希、Hash Slot。考虑到服务器处理能力的不同，可以采用加权的策略。
 
-### 一致性哈希
+### Consistent Hash
 
-用来解决分布式缓存的Hot Spot问题。将对象与服务器映射到哈希环上，离对象顺时针最近的就是存储的服务器，增删节点只会影响一小段哈希环上的对象。还要注意一下为了解决环偏斜可以引入虚拟节点。
-
-### 数据库分库分表
-
-垂直拆分：根据业务将表按字段拆分。
-
-水平拆分：数据行拆分。
-
-### 分布式锁
-
-数据库乐观锁实现方式：加时间戳或版本号。
-
-Redis实现分布式锁，要考虑一下可重入性，解锁时会不会误解掉别人的锁。
-
-
-
-
+用来解决分布式缓存的Hot Spot问题。将对象与服务器映射到哈希环上，离对象顺时针最近的就是存储的服务器，增删节点只会影响一小段哈希环上的对象。还要注意一下为了解决环偏斜可以引入虚拟节点，有点类似哈希槽。

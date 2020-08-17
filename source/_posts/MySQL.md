@@ -10,15 +10,15 @@ The world's most popular open source database
 
 <!-- more -->
 
-## 数据库范式
+## Normalization
 
 数据库范式是为了数据库设计的规范化而提出的一些概念。从第一范式到第六范式要求越严格，约束性越高。通俗来讲，即范式越小，数据冗余越大（数据重复），表现为存储变大，且对更新数据不友好；而范式越大，查询需要跨表。最好的实践是，需要根据业务设计合理的数据库Schema，通常围绕在第三范式。
 
 ### 第三范式
 
-关系模式中不允许有传递依赖。直观上判断，就是其它字段值只受限于主键。实践中，需要根据具体读写场景设计数据冗余度。
+关系模式中不允许有传递函数依赖。直观上判断，就是其它字段值只受限于主键。实践中，需要根据具体读写场景设计数据冗余度。
 
-## MySQL索引
+## Index
 
 ### 索引原理
 
@@ -38,7 +38,7 @@ InnoDB中有BTREE（实际上是B+树，叶子结点存数据），HASH与FULLTE
 
 在用普通索引检索时，会先根据该key找到主键，再通过主键找到记录，因此有两步操作。
 
-## MySQL并发
+## Concurrency
 
 锁是加在索引上的。比如对记录进行更新，会先锁住主键索引，如果更新的是索引字段，又会再锁住该索引。另一种情况，如果更新时是根据普通索引字段检索，会先锁住该索引，再锁住主键索引。
 
@@ -122,7 +122,7 @@ select … for update 加排它锁
 
 `SELECT * FROM INFORMATION_SCHEMA.INNODB_LOCK_WAITS`
 
-`show open tables
+`show open tables`
 
 ## InnoDB
 
@@ -181,3 +181,11 @@ select … for update 加排它锁
 >
 > - Linear read-ahead is a technique that predicts what pages might be needed soon based on pages in the buffer pool being accessed sequentially.
 > - Random read-ahead is a technique that predicts when pages might be needed soon based on pages already in the buffer pool, regardless of the order in which those pages were read. If 13 consecutive pages from the same extent are found in the buffer pool, InnoDB asynchronously issues a request to prefetch the remaining pages of the extent.
+
+### Miscellaneous
+
+#### 数据安全
+
+innodb_flush_log_at_trx_commit以及sync_binlog设为1，可以防止宕机时数据丢失。
+
+> Even having transactional logging and strict flushing activated your database is still not protected from half-written pages. This may still happen during a server crash (for ex. power outage) when the page write operation was interrupted in the middle. So, you'll get a corrupted data, and it will be impossible to repair it from the redo log as there are only changes saved within redo.

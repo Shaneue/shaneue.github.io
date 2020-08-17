@@ -13,7 +13,7 @@ A distributed streaming platform
 ## CONFIG
 
 - zookeeper.connect=localhost:2181（Kafka依赖于zookeeper，默认请求本地2181端口的zookeeper服务）
-- broker.id=0（在cluster中标识自己，默认为0，在本机启动多个Kafka服务时需要修改）
+- broker.id=0（在cluster中标识自己，默认为0，在启动多个Kafka服务时需要修改）
 - listeners=PLAINTEXT://:9092（端口号默认9092，在本机启动多个Kafka服务时需要修改）
 - log.dirs=/tmp/kafka-logs（在本机启动多个Kafka服务时需要修改）
 

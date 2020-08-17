@@ -160,7 +160,21 @@ Clazz clazz = (Clazz) enhancer.create();
 
 ### 5. Java8 ConcurrentHashMap.size()
 
-几个关键方法与变量：sunCount()、baseCount、CounterCell[] counterCells、addCount()、fullAddCount()
+几个关键方法与变量：sumCount()、baseCount、CounterCell[] counterCells、addCount()、fullAddCount()
+
+```java
+final long sumCount() {
+    CounterCell[] as = counterCells; CounterCell a;
+    long sum = baseCount;
+    if (as != null) {
+        for (int i = 0; i < as.length; ++i) {
+            if ((a = as[i]) != null)
+                sum += a.value;
+        }
+    }
+    return sum;
+}
+```
 
 ### 6. Fail-fast与Fail-safe
 
