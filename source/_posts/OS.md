@@ -1,7 +1,7 @@
 ---
 title: Operating System
 date: 2018-11-16 21:47:21
-updated: 2020-07-08 12:00:00
+updated: 2020-08-08 12:00:00
 tags: [OS]
 typora-root-url: ../
 ---
@@ -227,3 +227,71 @@ Socket（应用系统开发最常用）
 > For instance, if a pipe registered with epoll has received data, a call to epoll_wait will return, signaling the presence of data to be read. Suppose, the reader only consumed part of data from the buffer. In level-triggered mode, further calls to epoll_wait will return immediately, as long as the pipe's buffer contains data to be read. In edge-triggered mode, however, epoll_wait will return only once new data is written to the pipe.
 
 在边缘触发时，需要将socket设置成非阻塞，否则如果buffer中还有数据的话无法读到。
+
+边缘触发效率比较高，Nginx就采用这种模式。
+
+###### api
+
+> int epoll_create1(int flags);
+
+Creates an epoll object and returns its file descriptor. The flags parameter allows epoll behavior to be modified. It has only one valid value, EPOLL_CLOEXEC. epoll_create() is an older variant of epoll_create1() and is deprecated as of Linux kernel version 2.6.27 and glibc version 2.9.[4]
+
+> int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+Controls (configures) which file descriptors are watched by this object, and for which events. op can be ADD, MODIFY or DELETE.
+
+> int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+
+Waits for any of the events registered for with epoll_ctl, until at least one occurs or the timeout elapses. Returns the occurred events in events, up to maxevents at once.
+
+###### demo
+
+```c
+#define MAX_EVENTS 10
+struct epoll_event ev, events[MAX_EVENTS];
+int listen_sock, conn_sock, nfds, epollfd;
+
+/* Code to set up listening socket, 'listen_sock', (socket(), bind(), listen()) omitted */
+
+epollfd = epoll_create1(0);
+if (epollfd == -1) {
+    perror("epoll_create1");
+    exit(EXIT_FAILURE);
+}
+
+ev.events = EPOLLIN;
+ev.data.fd = listen_sock;
+if (epoll_ctl(epollfd, EPOLL_CTL_ADD, listen_sock, &ev) == -1) {
+    perror("epoll_ctl: listen_sock");
+    exit(EXIT_FAILURE);
+}
+
+for (;;) {
+    nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+    if (nfds == -1) {
+        perror("epoll_wait");
+        exit(EXIT_FAILURE);
+    }
+
+    for (n = 0; n < nfds; ++n) {
+        if (events[n].data.fd == listen_sock) {
+            conn_sock = accept(listen_sock,
+                               (struct sockaddr *)&addr, &addrlen);
+            if (conn_sock == -1) {
+                perror("accept");
+                exit(EXIT_FAILURE);
+            }
+            setnonblocking(conn_sock);
+            ev.events = EPOLLIN | EPOLLET;
+            ev.data.fd = conn_sock;
+            if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
+                          &ev) == -1) {
+                perror("epoll_ctl: conn_sock");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            do_use_fd(events[n].data.fd);
+        }
+    }
+}
+```

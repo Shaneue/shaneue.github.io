@@ -12,6 +12,68 @@ Review questions
 
 # Questions
 
+### Disjoint Set
+
+```java
+public class DisjointSet {
+    int[] f;
+
+    public DisjointSet(int n) {
+        this.f = new int[n];
+        for (int i = 0; i < n; i++) {
+            f[i] = i;
+        }
+    }
+
+    public void union(int p, int q) {
+        int rootP = root(p);
+        int rootQ = root(q);
+
+        if (rootP != rootQ) {
+            f[rootP] = f[rootQ];
+        }
+    }
+
+    public boolean find(int p, int q) {
+        return root(p) == root(q);
+    }
+
+    private int root(int i) {
+        if (i != f[i]) {
+            // path compression
+            f[i] = root(f[i]);
+        }
+        return f[i];
+    }
+}
+```
+
+### Binary Indexed Tree
+
+```java
+public class Bit {
+    int[] array;
+
+    public Bit(int length) {
+        array = new int[length + 1];
+    }
+
+    public void update(int x, int v) {
+        for (; x < array.length; x += x & -x) {
+            array[x] += v;
+        }
+    }
+
+    public int query(int x) {
+        int sum = 0;
+        for (; x > 0; x -= x & -x) {
+            sum += array[x];
+        }
+        return sum;
+    }
+}
+```
+
 ### LFU Cache
 
 ```java
@@ -178,7 +240,7 @@ Node reverseLinkedList(Node list) {
 
 ```java
 void heapify(int[] q) {
-    for (int i = q.length >>> 1; i >= 0; i--) {
+    for (int i = (q.length >>> 1) - 1; i >= 0; i--) {
         siftDown(q, i, q[i]);
     }
 }

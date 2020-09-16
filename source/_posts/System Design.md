@@ -3,6 +3,7 @@ title: System Design
 date: 2019-07-10 15:11:56
 updated: 2020-06-11 12:00:00
 tags: [System Design]
+typora-root-url: ../
 ---
 
 System design skills
@@ -179,6 +180,8 @@ Discuss potential solutions and trade-offs. Everything is a trade-off. Address b
 
 - Use cases such as inexpensive calculations and realtime workflows might be better suited for synchronous operations, as introducing queues can add delays and complexity.
 
+![](/images/rpc.png)
+
 ### RPC
 
 - RPC clients become tightly coupled to the service implementation.
@@ -192,3 +195,9 @@ Discuss potential solutions and trade-offs. Everything is a trade-off. Address b
 - REST typically relies on a few verbs (GET, POST, PUT, DELETE, and PATCH) which sometimes doesn't fit your use case. For example, moving expired documents to the archive folder might not cleanly fit within these verbs.
 - Fetching complicated resources with nested hierarchies requires multiple round trips between the client and server to render single views, e.g. fetching content of a blog entry and the comments on that entry. For mobile applications operating in variable network conditions, these multiple roundtrips are highly undesirable.
 - Over time, more fields might be added to an API response and older clients will receive all new data fields, even those that they do not need, as a result, it bloats the payload size and leads to larger latencies.
+
+## Miscellaneous
+
+#### Virtual Router Redundancy Protocol
+
+VRRP is a computer networking protocol that provides for automatic assignment of available Internet Protocol routers to participating hosts. This increases the availability and reliability of routing paths via automatic default gateway selections on an IP subnetwork.

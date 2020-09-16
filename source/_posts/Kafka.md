@@ -1,7 +1,7 @@
 ---
 title: Kafka
 date: 2020-06-06 13:50:03
-updated: 2020-07-01 12:00:00
+updated: 2020-08-01 12:00:00
 tags: [Message Broker]
 typora-root-url: ../
 ---
@@ -20,10 +20,14 @@ A distributed streaming platform
 ### consumer.properties
 
 - enable.auto.commit=true（消费者取到消息后先commit再进行消费）
+- isolation.level
 
 ### producer.properties
 
-- acks=1（leader会立即返回ack，-1或者all表示leader会等待followers确认后再返回ack，0表示不需要ack）
+- acks=1（leader会立即返回ack，-1或者all表示leader会等待in-sync replicas确认后再返回ack，0表示不需要ack）
+- transactional.id
+- enable.idempotence
+- max.in.flight.requests.per.connection（设置成1，可以避免乱序，同时牺牲了效率，默认为5）
 
 ## USAGE SCENARIO
 
@@ -112,6 +116,8 @@ Java的零拷贝技术可以使用java.nio.channels.FileChannel的transferTo()�
 
 ## REPLICATION
 
+默认配置下，是一个满足AP的系统。
+
 ### Zookeeper
 
 2.5版本对Zookeeper的依赖变少了。
@@ -136,11 +142,22 @@ Java的零拷贝技术可以使用java.nio.channels.FileChannel的transferTo()�
 
 /cluster/id是一个自动生成的id唯一标识cluster
 
+### In-Sync Replica
+
+This ISR set is persisted to ZooKeeper whenever it changes. Because of this, any replica in the ISR is eligible to be elected leader.
+
+1. A node must be able to maintain its session with ZooKeeper (via ZooKeeper's heartbeat mechanism)
+2. If it is a follower it must replicate the writes happening on the leader and not fall "too far" behind
+
+We refer to nodes satisfying these two conditions as being "in sync".
+
+Kafka使用ISR来提供主从partition的数据一致性与failover。
+
 ## MISCELLANEOUS
 
 ### 1. At-least-once
 
-默认acks=1，可以实现至少一次消息提交。但是貌似在leader所在节点宕机时，消息也有可能丢失。
+默认acks=1，可以实现至少一次消息提交。似乎还是会因为宕机且没有fsync丢失数据。
 
 ### 2. Exactly-once
 
@@ -167,3 +184,7 @@ Java的零拷贝技术可以使用java.nio.channels.FileChannel的transferTo()�
 > - Upgrade both broker cluster and client apps to 2.3 or beyond, and also make sure the upgraded brokers are using inter.broker.protocol.version of 2.3 or beyond as well.
 > - Set the config ConsumerConfig GROUP_INSTANCE_ID_CONFIG to a unique value for each consumer instance under one group.
 > - For Kafka Streams applications, it is sufficient to set a unique ConsumerConfig GROUP_INSTANCE_ID_CONFIG per KafkaStreams instance, independent of the number of used threads for an instance.
+
+### 5. Group Coordinator
+
+> Kafka provides the option to store all the offsets for a given consumer group in a designated broker (for that group) called the group coordinator.

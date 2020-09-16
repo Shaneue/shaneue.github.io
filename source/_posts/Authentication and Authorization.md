@@ -1,8 +1,9 @@
 ---
 title: Authentication and Authorization
 date: 2020-08-17 15:16:46
-updated: 2020-08-17 15:16:46
+updated: 2020-08-17 16:16:46
 tags: [System Design]
+typora-root-url: ../
 ---
 
 OAuth2 and OpenID Connect

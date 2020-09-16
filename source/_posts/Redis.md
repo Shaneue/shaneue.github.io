@@ -1,7 +1,7 @@
 ---
 title: Redis
 date: 2018-11-18 16:49:45
-updated: 2020-07-10 12:00:00
+updated: 2020-08-10 12:00:00
 tags: [Caching]
 typora-root-url: ../
 ---
@@ -238,6 +238,42 @@ appendonly yes
 此外，还有增删节点、重新分片等等运维操作。
 
 需要一个好用的Redis客户端才能使用到cluster的功能，流行语言基本都有比较活跃的client开源。
+
+#### Live Reconfiguration
+
+##### ADDSLOTS, DELSLOTS and SETSLOT
+
+> After the hash slots are assigned they will propagate across the cluster using the gossip protocol, as specified later in the configuration propagation section.
+>
+> The ADDSLOTS command is usually used when a new cluster is created from scratch to assign each master node a subset of all the 16384 hash slots available.
+>
+> The DELSLOTS is mainly used for manual modification of a cluster configuration or for debugging tasks: in practice it is rarely used.
+>
+> The SETSLOT subcommand is used to assign a slot to a specific node ID if the SETSLOT <slot> NODE form is used. Otherwise the slot can be set in the two special states MIGRATING and IMPORTING. Those two special states are used in order to migrate a hash slot from one node to another.
+>
+> - When a slot is set as MIGRATING, the node will accept all queries that are about this hash slot, but only if the key in question exists, otherwise the query is forwarded using a -ASK redirection to the node that is target of the migration.
+> - When a slot is set as IMPORTING, the node will accept all queries that are about this hash slot, but only if the request is preceded by an ASKING command. If the ASKING command was not given by the client, the query is redirected to the real hash slot owner via a -MOVED redirection error, as would happen normally.
+
+#### ASK and MOVED
+
+> Why can't we simply use MOVED redirection? Because while MOVED means that we think the hash slot is permanently served by a different node and the next queries should be tried against the specified node, ASK means to send only the next query to the specified node.
+>
+> This is needed because the next query about hash slot X can be about a key that is still in A, so we always want the client to try A and then B if needed. Since this happens only for one hash slot out of 16384 available, the performance hit on the cluster is acceptable.
+>
+> We need to force that client behavior, so to make sure that clients will only try node B after A was tried, node B will only accept queries of a slot that is set as IMPORTING if the client sends the ASKING command before sending the query.
+>
+> Basically the ASKING command sets a one-time flag on the client that forces a node to serve a query about an IMPORTING slot.
+>
+> The full semantics of ASK redirection from the point of view of the client is as follows:
+>
+> - If ASK redirection is received, send only the query that was redirected to the specified node but continue sending subsequent queries to the old node.
+> - Start the redirected query with the ASKING command.
+> - Don't yet update local client tables to map hash slot X to B.
+>
+> Clients usually need to fetch a complete list of slots and mapped node addresses in two different situations:
+>
+> - At startup in order to populate the initial slots configuration.
+> - When a MOVED redirection is received.
 
 ## Miscellaneous
 

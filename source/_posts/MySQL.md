@@ -189,3 +189,14 @@ select … for update 加排它锁
 innodb_flush_log_at_trx_commit以及sync_binlog设为1，可以防止宕机时数据丢失。
 
 > Even having transactional logging and strict flushing activated your database is still not protected from half-written pages. This may still happen during a server crash (for ex. power outage) when the page write operation was interrupted in the middle. So, you'll get a corrupted data, and it will be impossible to repair it from the redo log as there are only changes saved within redo.
+
+#### Redo, undo and binary log
+
+The redo log is a disk-based data structure used during crash recovery to correct data written by incomplete transactions.
+
+An undo log is a collection of undo log records associated with a single read-write transaction. An undo log record contains information about how to undo the latest change by a transaction to a clustered index record.
+
+The binary log contains “events” that describe database changes such as table creation operations or changes to table data. It also contains events for statements that potentially could have made changes (for example, a DELETE which matched no rows), unless row-based logging is used. The binary log also contains information about how long each statement took that updated data. The binary log has two important purposes:
+
+- For replication, the binary log on a replication source server provides a record of the data changes to be sent to replicas. The source sends the events contained in its binary log to its replicas, which execute those events to make the same data changes that were made on the source.
+- Certain data recovery operations require use of the binary log. After a backup has been restored, the events in the binary log that were recorded after the backup was made are re-executed. These events bring databases up to date from the point of the backup.
