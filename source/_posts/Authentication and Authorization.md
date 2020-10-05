@@ -26,7 +26,15 @@ The Central Authentication Service (CAS) is a single sign-on protocol for the we
 
 ## OAuth2.0
 
+### Authorization Code Grant
+
+Is used by confidential and public clients to exchange an authorization code for an access token.
+
 使用OAuth2来做认证是不安全的。因为authorization code是不包含可验证的用户信息，用户无法知道返回的这个code是不是来自合法的认证服务器。
+
+state参数可以防止csrf。
+
+> Most modern OIDC and OAuth2 SDKs handle the state generation and validation automatically.
 
 HTTPS只能加密数据，无法防止CSRF。
 
@@ -41,9 +49,32 @@ JSON Web Token (JWT, sometimes pronounced /dʒɒt/) is an Internet standard for 
 OpenID Connect (OIDC) is an authentication layer on top of OAuth 2.0, an authorization framework.
 
 1. The user attempts to start a session with your client app and is redirected to the OpenID Provider, passing in the client ID, which is unique for that application.
+
 2. The OpenID Provider authenticates and authorizes the user for a particular application instance.
+
+   这里会引导用户进行身份认证，并且同意授权给该第三方应用。
+
 3. A one-time-use code is passed back to the web server using a predefined Redirect URI.
+
 4. The web server passes the code, client ID, and client secret to the OpenID Provider’s token endpoint, and the OpenID Provider validates the code and returns a one-hour access token and JWT.
+
 5. The web server uses the access token to get further details about the user and establishes a session for the user.
 
 OpenID Connect allows a range of parties, including web-based, mobile and JavaScript clients, to request and receive information about authenticated sessions and end-users. The OpenID Connect specification is extensible, supporting optional features such as encryption of identity data, discovery of OpenID providers, and session management.
+
+## Security Guide
+
+- Use HTTPS everywhere.
+
+- Store password hashes using `Bcrypt` (no salt necessary - `Bcrypt` does it for you).
+- Destroy the session identifier after `logout`.
+- Destroy all active sessions on reset password (or offer to).
+- Must have the `state` parameter in OAuth2.
+- No open redirects after successful login or in any other intermediate redirects.
+- When parsing Signup/Login input, sanitize for javascript://, data://, CRLF characters.
+- Set secure, httpOnly cookies.
+- In Mobile `OTP` based mobile verification, do not send the OTP back in the response when `generate OTP` or `Resend OTP` API is called.
+- Limit attempts to `Login`, `Verify OTP`, `Resend OTP` and `generate OTP` APIs for a particular user. Have an exponential backoff set or/and something like a captcha based challenge.
+- Check for randomness of reset password token in the emailed link or SMS.
+- Set an expiration on the reset password token for a reasonable period.
+- Expire the reset token after it has been successfully used.

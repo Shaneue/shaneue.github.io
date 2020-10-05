@@ -73,19 +73,21 @@ pfadd、pfcount
 
 ### How Redis expires keys
 
+6.0做了较大改进，stale keys比例默认降到10%，并可配置
+
 > A key is passively expired simply when some client tries to access it, and the key is found to be timed out.
 >
 > Periodically Redis tests a few keys at random among keys with an expire set. All the keys that are already expired are deleted from the key space.
 >
 > Specifically this is what Redis does 10 times per second:
 >
-> 1. Test 20 random keys from the set of keys with an associated expire. (默认25?)
+> 1. Test 20 random keys from the set of keys with an associated expire. 
 > 2. Delete all the keys found expired.
-> 3. If more than 25% of keys were expired, start again from step 1.
+> 3. If more than 10% of keys were expired, start again from step 1.
 >
 > In order to obtain a correct behavior without sacrificing consistency, when a key expires, a [DEL](https://redis.io/commands/del) operation is synthesized in both the AOF file.
 >
-> The default effort of the expire cycle will try to avoid having more than ten percent of expired keys still in memory, and will try to avoid consuming more than 25% of total memory and to add latency to the system.
+> The default effort of the expire cycle will try to avoid having more than ten percent of expired keys still in memory, and will try to avoid consuming more than 25% of cpu usage and to add latency to the system.
 
 源码在expire.c
 

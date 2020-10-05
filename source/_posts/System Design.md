@@ -198,6 +198,16 @@ Discuss potential solutions and trade-offs. Everything is a trade-off. Address b
 
 ## Miscellaneous
 
-#### Virtual Router Redundancy Protocol
+### Virtual Router Redundancy Protocol
 
 VRRP is a computer networking protocol that provides for automatic assignment of available Internet Protocol routers to participating hosts. This increases the availability and reliability of routing paths via automatic default gateway selections on an IP subnetwork.
+
+### 双主平滑扩容流程
+
+1. 初始状态的高可用架构采用虚拟ip（keepalived）路由到双主数据库，其中只用一个库进行读写。
+2. 增加一个虚拟ip，两个ip可以同时路由到双主的机器，形成双虚拟ip架构。
+3. 服务进行扩容，对成倍数量的机器进行取模，多出来的余数值，映射到新增加的虚拟ip。
+4. 新旧虚拟ip单独分别映射到对应的两个双主机器。
+5. 双主取消同步。
+6. 删除冗余数据。
+7. 扩容后再为每一个数据库增加一个双主同步的备用机器，用虚拟ip形成高可用。
