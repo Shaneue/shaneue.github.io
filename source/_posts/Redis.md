@@ -291,7 +291,7 @@ Starting with version 6 Redis supports ACLs. It is possible to configure users a
 
 ### Lock with a single instance
 
-要考虑一下可重入性，解锁时会不会误解掉别人的锁。注意设置过期时间，并使用pipeline或者lua脚本来执行解锁操作。
+要考虑一下可重入性，解锁时会不会误解掉别人的锁。注意设置过期时间，耗时任务注意刷新时间，并使用pipeline或者lua脚本来执行解锁操作。
 
 ### RedLock
 

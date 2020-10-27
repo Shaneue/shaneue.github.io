@@ -12,6 +12,64 @@ Review questions
 
 # Questions
 
+### Greatest Common Divisor
+
+```java
+int gcd(int m, int n) {
+    while (n != 0) {
+        m %= n;
+        m ^= n;
+        n ^= m;
+        m ^= n;
+    }
+    return m;
+}
+```
+
+### 逆元
+
+- #### 递推公式：
+
+```java
+inv[i] = inv[p % i] * (p - p / i) % p
+```
+
+- #### Extended Euclid
+
+- #### 快速幂
+
+```java
+long inverseElement(long a, long n) {
+    return quickPower(a, n - 2, n);
+}
+
+long quickPower(long a, long b, long mod) {
+    long ret = 1;
+    while (b != 0) {
+        if ((b & 1) == 1) ret = ret * a % mod;
+        a = a * a % mod;
+        b >>= 1;
+    }
+    return (int) (ret % mod);
+}
+```
+
+### Merge Sort
+
+```java
+void mergeSort(int[] nums, int l, int r, int[] temp) {
+    if (l == r) return;
+    int mid = l + (r - l) / 2;
+    mergeSort(nums, l, mid, temp);
+    mergeSort(nums, mid + 1, r, temp);
+    int i = l, j = mid + 1, s = l;
+    while (i <= mid && j <= r) temp[s++] = nums[i] < nums[j] ? nums[i++] : nums[j++];
+    while (i <= mid) temp[s++] = nums[i++];
+    while (j <= r) temp[s++] = nums[j++];
+    for (i = l; i <= r; i++) nums[i] = temp[i];
+}
+```
+
 ### Disjoint Set
 
 ```java
@@ -329,4 +387,4 @@ public class LRUMap<K, V> extends LinkedHashMap<K, V> {
 
 ### Consistent Hash
 
-用来解决分布式缓存的Hot Spot问题。将对象与服务器映射到哈希环上，离对象顺时针最近的就是存储的服务器，增删节点只会影响一小段哈希环上的对象。还要注意一下为了解决环偏斜可以引入虚拟节点，有点类似哈希槽。
+用来解决分布式缓存的Hot Spot问题。将对象与服务器映射到哈希环上，离对象顺时针最近的就是存储的服务器，增删节点只会影响一小段哈希环上的对象。还要注意一下为了解决环偏斜可以引入虚拟节点，有点类似哈希槽。该算法适合用红黑树实现。

@@ -177,7 +177,7 @@ Kafka使用ISR来提供主从partition的数据一致性与failover。
 
 ### 4. Static Membership
 
-利用这个特性，可以不触发rebalance过程。
+利用这个特性，可以减少触发rebalance过程的次数。
 
 > If you want to use static membership,
 >
