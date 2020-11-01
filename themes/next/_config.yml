@@ -58,7 +58,7 @@ footer:
   icon: user
 
   # If not defined, will be used `author` from Hexo main config.
-  copyright: Life Is Never Easy.
+  copyright:
   # -------------------------------------------------------------
   # Hexo link (Powered by Hexo).
   powered: false

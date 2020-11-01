@@ -250,3 +250,7 @@ TimeWheel时间轮算法
 ### 线程池配置技巧
 
 根据计算密集还是io密集型任务来配置size
+
+### Spring Boot
+
+ComponentScan、EnableAutoConfiguration、Import、DependsOn、Conditional

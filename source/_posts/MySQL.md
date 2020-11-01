@@ -202,3 +202,10 @@ The binary log contains “events” that describe database changes such as tabl
 
 - For replication, the binary log on a replication source server provides a record of the data changes to be sent to replicas. The source sends the events contained in its binary log to its replicas, which execute those events to make the same data changes that were made on the source.
 - Certain data recovery operations require use of the binary log. After a backup has been restored, the events in the binary log that were recorded after the backup was made are re-executed. These events bring databases up to date from the point of the backup.
+
+#### RR隔离下的幻读
+
+在前一次快照读，第二次按条件update之后再读的情况下是会出现广义上的幻读的。
+
+连续的快照读会因为MVCC不会出现幻读，连续的当前读会加Next-Key Lock，也不会出现幻读。
+
