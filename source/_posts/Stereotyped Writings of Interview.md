@@ -22,7 +22,7 @@ aqs是java并发包里基础的一个类，很多并发类基于该抽象类来�
 
 CLH是一个FIFO的双向链表。
 
-实现aqs时，公平与非公平主要在于tryAcquire时，会去判断是否队列是否有等待线程在，如果有的话会选择排到队尾。
+实现aqs时，公平与非公平主要在于tryAcquire时，会去判断队列是否有等待线程在，如果有的话acquire失败会选择排到队尾。
 
 state在共享模式时，表示共享次数，独占模式时，表示重入次数。
 
@@ -254,3 +254,24 @@ TimeWheel时间轮算法
 ### Spring Boot
 
 ComponentScan、EnableAutoConfiguration、Import、DependsOn、Conditional
+
+### 阻塞队列
+
+参考LinkedBlockingQueue的实现
+
+### UUID
+
+V1-V5，其实使用V4就行了，每秒100亿，持续生产100年，产生一次重复的概率是50%。如果想要产生的uuid有序，需要采用时间作为前缀。
+
+### GC调优
+
+新生代大小、大对象大小、进入老年代年龄大小、堆大小、监控minor gc次数与时间（10s一次、50ms）、full gc次数与时间（10分钟一次、1s）
+
+### 限流
+
+服务端、客户端、令牌、漏桶
+
+### Netty线程模型
+
+EventLoop、Selector、Channel、boss、worker、EventLoopGroup
+

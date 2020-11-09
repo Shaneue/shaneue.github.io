@@ -56,6 +56,8 @@ The greatest disadvantage of the two-phase commit protocol is that it is a block
 
 Three-phase commit protocol, Try-Confirm/Cancel (TCC)
 
+TCC本质上也是两阶段提交，针对资源做部分冻结（可类比为预先commit），而不是等待所有子事务共同提交。又称为补偿型事务，常见于支付场景的例子。
+
 ## MQ-based Eventual Consistency
 
 使用数据库和消息队列来保证最终一致性。默认消息队列提供至少一次语义。

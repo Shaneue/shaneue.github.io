@@ -24,7 +24,7 @@ quicklist是list结构的底层实现，将ziplist串起来了，替换掉了旧
 
 The maximum allowed key size is 512 MB.
 
-通过命令可以操作8种数据类型：
+通过命令可以操作的常用数据类型：
 
 > - Binary-safe strings.
 > - Lists: collections of string elements sorted according to the order of insertion. They are basically linked lists.
@@ -173,7 +173,9 @@ AOF支持重写压缩。
 >
 > set-max-intset-entries 512
 
-Redis消耗的Resident Set Size是根据peak memory usage来决定的，因此最好配置maxmemory，防止内存被使用光。
+Redis消耗的Resident Set Size更接近于peak memory usage。最好配置maxmemory，防止内存被使用光。
+
+maxmemory对应的是used memory。
 
 ## Replication
 
