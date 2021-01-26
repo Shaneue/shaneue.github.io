@@ -20,7 +20,7 @@ A distributed streaming platform
 ### consumer.properties
 
 - enable.auto.commit=true（消费者取到消息后先commit再进行消费）
-- isolation.level
+- isolation.level（Controls how to read messages written transactionally.）
 
 ### producer.properties
 
@@ -48,6 +48,8 @@ broker、partition、consumer、group的关系
 
 ![](/images/kafka3.png)
 
+一个segment对应三个文件：log存储具体消息、index存储offset到position的映射、timeindex存储timestamp到offset的映射。
+
 ## DESIGN
 
 ### 1. Filesystem
@@ -66,7 +68,7 @@ Disk seek很慢且无法并行。
 
 围绕pagecache做设计。
 
-使用持久化队列的数据结构存储，所有操作都是常数复杂度，无删除操作，读与写不会相互阻塞。
+使用持久化队列的数据结构存储，顺序读写操作都是常数复杂度，无删除操作，读与写不会相互阻塞。
 
 ### 2. Efficiency
 
@@ -152,6 +154,8 @@ This ISR set is persisted to ZooKeeper whenever it changes. Because of this, any
 We refer to nodes satisfying these two conditions as being "in sync".
 
 Kafka使用ISR来提供主从partition的数据一致性与failover。
+
+2.4以后的版本可以在broker配置从replicas中消费。（不支持consumer自由选择replica）
 
 ## MISCELLANEOUS
 

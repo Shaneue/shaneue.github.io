@@ -275,3 +275,10 @@ V1-V5，其实使用V4就行了，每秒100亿，持续生产100年，产生一�
 
 EventLoop、Selector、Channel、boss、worker、EventLoopGroup
 
+### TCP
+
+超时重传、滑动窗口、流量控制（窗口大小）、发送方拥塞窗口（cwnd）、拥塞、慢开始、拥塞避免、快重传、快恢复
+
+### 不停机升级
+
+无状态、数据库
